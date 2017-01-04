@@ -1,0 +1,70 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\begin{document}	
+	% Insert the algorithm
+	\begin{algorithm}
+		\caption{Find user's serving cell}
+		\label{array-sum}
+		\begin{algorithmic}[1]
+			\State $threshold = T$
+			\State $N_{cell} = 31$
+			\State $N_{user} = 39$
+			\State $N_{sector} = 5$			
+			\State $CM = InitCell(N_{cell})$
+			\State $UM = InitUser(N_{user})$
+			\\
+			\For {$u \in UM$}
+			    \For {$c \in CM$}
+		            \State $SNR = getSnr(c, u)$
+			        \If {$SNR >= threshold$}
+			            \State $R = getRegion(c, u)$
+			            \State $R.add(u)$
+		            \EndIf
+		        \EndFor        
+			\EndFor
+			\\			
+			\For{$epoch = 1\quad to \quad(N_{cell}*N_{sector})$}
+			    \State $(\hat{C}, \hat{R}) = findMaxUser(CM)$
+			    \For{$u \in \hat{R}$}\\
+			        \state $\quad\quad\quad u.servingcell = \hat{C}$
+			        \For{$c \in CM$}
+			            \If{$u$ is under the region $R$ of $c$ \&\& $c \neq \hat{C}$}
+			                \State $R.remove(u)$
+			            \EndIf
+		            \EndFor
+	            \EndFor
+            \EndFor
+		\end{algorithmic}
+	\end{algorithm}	
+	
+	
+	
+	\begin{algorithm}
+		\caption{Decrease each cell's power}
+		\label{array-sum}
+		\begin{algorithmic}[1]
+			\State $threshold =$T		
+			\\
+			\For {$c \in CM$}
+			    \State $flag = True$
+			    \While{$c.isNotMinPwer()$ and $flag==True$}
+		            \State $c.powerDown(1)$
+		            \For {each user $u$ which is under the service of $c$}\\
+	                    \state $\quad\quad\quad\quad\quad SNRlater = getSnr(c, u)$
+	                    \If{$SNRlater \textless threshold$}\\
+	                        \state $\quad\quad\quad\quad\quad\quad c.powerUp(1)$\\
+	                        \state $\quad\quad\quad\quad\quad\quad flag = False$ 
+	                        \State break
+                        \EndIf
+                    \EndFor
+               \EndWhile
+           \EndFor
+		\end{algorithmic}
+	\end{algorithm}	
+\end{document}
+
