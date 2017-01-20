@@ -5,34 +5,54 @@ import SmallCell as sc
 import User as ur
 import Utility as ut
 from math import sqrt, pi, degrees, atan2, log, pow, inf
-
-
+import pickle as pk
+    
+def init_pos(MAX_CELL = 10000, MAX_USER = 20000):
+    cm_pos = []
+    um_pos = []
+    for _ in range(MAX_CELL):
+        x = rd.uniform(0, pr.map_size[0])
+        y = rd.uniform(0, pr.map_size[1])
+        cm_pos.append((x, y))
+    for _ in range(MAX_USER):
+        x = rd.uniform(0, pr.map_size[0])
+        y = rd.uniform(0, pr.map_size[1])
+        um_pos.append((x, y))
+    with open (pr.fn_pos_random, 'wb') as f:
+        pk.dump([cm_pos, um_pos], f)
+    
 
     
 def init_cell():
     mylist = []
-    fix_pos = ut.load_pos_cell()
     for i in range(pr.cell_no):
-        pos_x = rd.uniform(0, pr.map_size[0])
-        pos_y = rd.uniform(0, pr.map_size[1])
         if pr.fix_cell_pos:
+            fix_pos = ut.load_pos_cell()
             mylist.append( sc.Cell(fix_pos[i][0], fix_pos[i][1]) )
         else: 
+            with open (pr.fn_pos_random, 'rb') as f:
+                pos = pk.load(f)
+                rd_cm_pos = pos[0]
+            pos_x = rd_cm_pos[i][0]
+            pos_y = rd_cm_pos[i][1]
             mylist.append( sc.Cell(pos_x, pos_y) )
     return mylist
     
     
 def init_user():
     mylist = []
-    fix_pos = ut.load_pos_user()
     for i in range(pr.user_no):
-        pos_x = rd.uniform(0, pr.map_size[0])
-        pos_y = rd.uniform(0, pr.map_size[1])
         if pr.fix_user_pos:
+            fix_pos = ut.load_pos_user()
             mylist.append( ur.User(fix_pos[i][0], fix_pos[i][1]) )
         else: 
+            with open (pr.fn_pos_random, 'rb') as f:
+                pos = pk.load(f)
+                rd_um_pos = pos[1]
+            pos_x = rd_um_pos[i][0]
+            pos_y = rd_um_pos[i][1]
             mylist.append( ur.User(pos_x, pos_y) )
-    return mylist   
+    return mylist 
     
     
 def cco(cm, um):
@@ -54,7 +74,6 @@ def alg1(cm, um):
         
     mark = [[0]*pr.sector_no  for _ in range(pr.cell_no)]    # indicate which cell's sector has already been allocated user completely.  If allocate=1,  unallocate=0
     for u in um:            # 一開始power全開，當cell的某個region有涵蓋到user，就把該user加入此region
-        #print (ut.get_snr(cm[0], u, cm, pr.isInterfere, False))
         for c in cm:        # in this time, users can receive many cells' signal, but they haven't yet been allocated to any cell.
             snr = ut.get_snr(c, u, cm, pr.isInterfere, False)
             dist = ut.get_dist(c.pos_x, c.pos_y, u.pos_x, u.pos_y)
@@ -150,5 +169,6 @@ def begin():
     
     
 if __name__ == '__main__':          # main function
+   #init_pos()
     begin()
         

@@ -1,6 +1,5 @@
 
-snr數值不穩 一部分是因為gaussian noise 且要除interfere才有辦法消掉watt單位   ANS:把interference降100倍
-thredshold 設太高 
+snr數值不穩 一部分是因為gaussian noise 且要除interfere才有辦法消掉watt單位 
 
 ALG1 一開始算SNR 過threashold 不要考慮interfere
 path loss太大

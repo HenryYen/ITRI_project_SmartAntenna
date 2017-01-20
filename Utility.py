@@ -80,14 +80,15 @@ def get_dist(x1, y1, x2, y2):
     
     
 def draw_system(cm, um):
-    color = ['b', 'g', 'r', 'c', 'k', 'y', 'm' ,'w', '#8172B2', '#56B4E9']
+    color = ['b', 'g', 'r', 'c', 'k', 'y', 'm' ,'w', '#8172B2', '#56B4E9', '#D0BBFF', '#D65F5F', '#017517', '#e5ae38', '#001C7F', '#6ACC65', '#8EBA42', '#EAEAF2', '#7600A1', '#E8000B']
     for c in cm:
         idx_c = cm.index(c)
-        plt.text(c.pos_x, c.pos_y, 'S'+str(idx_c))
-        plt.plot(c.pos_x, c.pos_y, color = color[idx_c % 10], marker='^')
+        color_no = idx_c % len(color)
+        plt.text(c.pos_x, c.pos_y, str(idx_c))
+        plt.plot(c.pos_x, c.pos_y, color = color[color_no], marker='^')
         for sec in c.client:
             for u in sec:
-                plt.plot(u.pos_x, u.pos_y, color = color[idx_c % 10], marker='o')                
+                plt.plot(u.pos_x, u.pos_y, color = color[color_no], marker='o')                
         
     plt.axis([0, pr.map_size[0], 0, pr.map_size[1]])
     plt.xlabel('x')
